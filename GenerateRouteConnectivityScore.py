@@ -3,12 +3,11 @@
 
 
 route_stops_name = 'trimet_route_stops'
-stops_name = 'trimet_stops'
 routes_name = 'trimet_routes'
 
 route_stops_layer = QgsProject.instance().mapLayersByName(route_stops_name)[0]
-stops_layer = QgsProject.instance().mapLayersByName(stops_name)[0]
 routes_layer = QgsProject.instance().mapLayersByName(routes_name)[0]
+
 
 # Selects features from layer matching rt_num and rt_dir
 def select_by_route(layer, rt_num, rt_dir):
@@ -17,6 +16,7 @@ def select_by_route(layer, rt_num, rt_dir):
     processing.run("qgis:selectbyexpression", {
         'INPUT': layer,
         'EXPRESSION': exp_string, 'METHOD': 0})
+
 
 # Create buffer around layer's selected features
 # Returns the vector layer containing the buffer
@@ -79,10 +79,6 @@ def add_connections():
             route['CONNECTIONS'] = len(connected_routes)
             routes_layer.updateFeature(route)
 
-            print(f"*** ROUTE {rte}-{dr} CONNECTS TO")
-            for i in connected_routes:
-                print(f"          {i[0]},{i[1]}")
-
 
     routes_layer.commitChanges()
 
@@ -93,6 +89,7 @@ if 'CONNECTIONS' not in next(routes_layer.getFeatures()).attributes():
     routes_layer.startEditing()
     routes_layer.addAttribute(QgsField('CONNECTIONS', QVariant.Int))
     routes_layer.updateFields()
+
 add_connections()
 
 
